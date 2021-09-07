@@ -1,19 +1,8 @@
 const express = require("express");
-const mongoose = require("mongoose");
-const validateGenre = require("../validations/genres");
+const { Genre, validateGenre } = require("../models/genre");
 const { successResult, failureResult } = require('../utils');
 
 const router = express.Router();
-
-const Genre = mongoose.model(
-    "Genre",
-    mongoose.Schema({
-        name: {
-            type: String,
-            required: true
-        }
-    })
-);
 
 async function createGenre(name) {
     const genre = new Genre({
@@ -31,6 +20,9 @@ async function createGenre(name) {
 async function getGenre(id) {
     try {
         const genres = await (!!id ? Genre.findById(id) : Genre.find().sort({ name: 1}));
+        if (!genres) {
+            return failureResult("Genre not found");
+        }
         return successResult(genres);
     } catch (ex) {
         return failureResult(ex.message);

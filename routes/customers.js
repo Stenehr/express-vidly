@@ -1,26 +1,8 @@
 const express = require("express");
-const mongoose = require("mongoose");
-const validateCustomer = require("../validations/customer");
+const { Customer, validateCustomer } = require('../models/customer');
 const { successResult, failureResult } = require("../utils");
 
 const router = express.Router();
-
-const Customer = mongoose.model(
-    "Customer",
-    mongoose.Schema({
-        isGold: {
-            type: Boolean,
-            default: false
-        },
-        name: {
-            type: String,
-            required: true
-        },
-        phone: {
-            type: String
-        }
-    })
-);
 
 router.get("/", async (req, res) => {
     try {
@@ -35,10 +17,11 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
     try {
         const customer = await Customer.findById(req.params.id);
+        if (!customer) return res.status(404).json(failureResult("Customer not found"));
 
         return res.status(200).json(successResult(customer));
     } catch (ex) {
-        return res.status(404).json(failureResult(ex.message));
+        return res.status(400).json(failureResult(ex.message));
     }
 });
 
