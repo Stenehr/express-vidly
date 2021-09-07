@@ -1,29 +1,25 @@
-
-const express = require('express');
-const validateGenre = require('../validations/genres');
+const express = require("express");
+const mongoose = require("mongoose");
+const validateGenre = require("../validations/genres");
 
 const router = express.Router();
 
-const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/vidly')
-        .then(() => console.log('connected...'))
-        .catch((err) => console.log(err));
-
-const genreSchema = mongoose.Schema({
-    name: { 
-        type: String,
-        required: true
-    }
-});
-
-const Genre = mongoose.model('Genre', genreSchema);
+const Genre = mongoose.model(
+    "Genre",
+    mongoose.Schema({
+        name: {
+            type: String,
+            required: true
+        }
+    })
+);
 
 function operationResult(success, data, err) {
     return {
         success,
         data,
         error: err
-    }
+    };
 }
 
 async function createGenre(name) {
@@ -42,7 +38,7 @@ async function createGenre(name) {
 
 async function getGenre(id) {
     try {
-        const genres = await (!!id ? Genre.findById(id) : Genre.find());
+        const genres = await (!!id ? Genre.findById(id) : Genre.find().sort({ name: 1}));
         return operationResult(true, genres);
     } catch (ex) {
         return operationResult(false, null, ex.message);
@@ -67,28 +63,28 @@ async function updateGenre(id, name) {
     }
 }
 
-async function deleteGenre(id) {
+async function removeGenre(id) {
     try {
-        const result = await Genre.deleteOne({ _id: id });
+        const result = await Genre.findByIdAndRemove(id);
         return operationResult(true, result);
     } catch (ex) {
         return operationResult(false, null, ex.message);
     }
 }
 
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
     const genres = await getGenre();
     res.status(200).json(genres);
 });
 
-router.get('/:id', async (req, res) => {
+router.get("/:id", async (req, res) => {
     const getGenreResult = await getGenre(req.params.id);
     if (!getGenreResult.success) return res.status(404).json(getGenreResult);
 
     res.status(200).json(getGenreResult);
-})
+});
 
-router.post('/', async (req, res) => {
+router.post("/", async (req, res) => {
     const { error } = validateGenre(req.body);
     if (error) return res.status(404).json(operationResult(false, null, error.details[0].message));
 
@@ -99,7 +95,7 @@ router.post('/', async (req, res) => {
     res.status(201).json(creationResult);
 });
 
-router.put('/:id', async (req, res) => {
+router.put("/:id", async (req, res) => {
     const { error } = validateGenre(req.body);
     if (error) return res.status(400).json(operationResult(false, null, error.details[0].message));
 
@@ -109,8 +105,8 @@ router.put('/:id', async (req, res) => {
     res.status(200).json(updateResult);
 });
 
-router.delete('/:id', async (req, res) => {
-    const deleteResult = await deleteGenre(req.params.id);
+router.delete("/:id", async (req, res) => {
+    const deleteResult = await removeGenre(req.params.id);
     if (!deleteResult.success) return res.status(400).json(deleteResult);
 
     res.status(200).json(deleteResult);
