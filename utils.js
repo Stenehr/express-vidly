@@ -1,8 +1,7 @@
-
 function successResult(data) {
     return {
         success: true,
-        data,
+        data
     };
 }
 
@@ -10,7 +9,7 @@ function failureResult(error) {
     return {
         success: false,
         error
-    }
+    };
 }
 
 module.exports = {

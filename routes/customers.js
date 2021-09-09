@@ -1,10 +1,10 @@
-const express = require("express");
+const express = require('express');
 const { Customer, validateCustomer } = require('../models/customer');
-const { successResult, failureResult } = require("../utils");
+const { successResult, failureResult } = require('../utils');
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
+router.get('/', async (req, res) => {
     try {
         const customers = await Customer.find().sort({ name: 1 });
 
@@ -14,10 +14,11 @@ router.get("/", async (req, res) => {
     }
 });
 
-router.get("/:id", async (req, res) => {
+router.get('/:id', async (req, res) => {
     try {
         const customer = await Customer.findById(req.params.id);
-        if (!customer) return res.status(404).json(failureResult("Customer not found"));
+        if (!customer)
+            return res.status(404).json(failureResult('Customer not found'));
 
         return res.status(200).json(successResult(customer));
     } catch (ex) {
@@ -25,9 +26,10 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-router.post("/", async (req, res) => {
+router.post('/', async (req, res) => {
     const { error } = validateCustomer(req.body);
-    if (error) return res.status(400).json(failureResult(error.details[0].message));
+    if (error)
+        return res.status(400).json(failureResult(error.details[0].message));
 
     try {
         const { isGold, name, phone } = req.body;
@@ -45,9 +47,10 @@ router.post("/", async (req, res) => {
     }
 });
 
-router.put("/:id", async (req, res) => {
+router.put('/:id', async (req, res) => {
     const { error } = validateCustomer(req.body);
-    if (error) return res.status(400).json(failureResult(error.details[0].message));
+    if (error)
+        return res.status(400).json(failureResult(error.details[0].message));
 
     try {
         const { isGold, name, phone } = req.body;
@@ -69,7 +72,7 @@ router.put("/:id", async (req, res) => {
     }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete('/:id', async (req, res) => {
     try {
         const course = await Customer.findByIdAndRemove(req.params.id);
 
