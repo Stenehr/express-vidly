@@ -6,6 +6,15 @@ const { successResult, failureResult } = require('../utils');
 
 const router = express.Router();
 
+router.get('/', async (req, res) => {
+    try {
+        const rentals = await Rental.find();
+        return res.status(200).json(successResult(rentals));
+    } catch (ex) {
+        return res.status(404).json(failureResult(ex.message));
+    }
+});
+
 router.post('/', async (req, res) => {
     const { error } = validateRental(req.body);
     if (error) return res.status(400).json(failureResult(error.details[0].message));
