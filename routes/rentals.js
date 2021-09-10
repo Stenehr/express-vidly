@@ -34,7 +34,7 @@ router.post('/', async (req, res) => {
             },
             movie: {
                 title: movie.title,
-                dailyRentalRate: movie.dailyRentalRate
+                dailyRentalRate: movie.dailyRentalRate 
             },
             dateReturned: new Date() + 5,
             rentalFee: movie.dailyRentalRate * 5
