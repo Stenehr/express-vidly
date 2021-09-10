@@ -3,6 +3,7 @@ const express = require('express');
 const genreRoutes = require('./routes/genres');
 const customerRoutes = require('./routes/customers');
 const movieRoutes = require('./routes/movies');
+const rentalRoutes = require('./routes/rentals');
 
 const app = express();
 
@@ -17,5 +18,6 @@ app.use(express.json());
 app.use('/api/genres', genreRoutes);
 app.use('/api/customers', customerRoutes);
 app.use('/api/movies', movieRoutes);
+app.use('/api/rentals', rentalRoutes);
 
 app.listen(3000, () => console.log('Listening on port 3000'));
