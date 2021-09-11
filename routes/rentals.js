@@ -28,11 +28,13 @@ router.post('/', async (req, res) => {
 
         const rental = new Rental({
             customer: {
+                _id: customer._id,
                 name: customer.name,
                 isGold: customer.isGold,
                 phone: customer.phone
             },
             movie: {
+                _id: movie._id,
                 title: movie.title,
                 dailyRentalRate: movie.dailyRentalRate
             },
@@ -40,6 +42,10 @@ router.post('/', async (req, res) => {
             rentalFee: movie.dailyRentalRate * 5
         })
         const result = await rental.save();
+
+        movie.numberInStock--;
+        movie.save();
+
         return res.status(404).json(successResult(result));
     } catch (ex) {
         return res.status(400).json(failureResult(ex.message));
