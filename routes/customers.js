@@ -39,7 +39,7 @@ router.post('/', async (req, res) => {
             phone
         });
 
-        customer = await customer.save();
+        await customer.save();
 
         return res.status(200).json(successResult(customer));
     } catch (ex) {

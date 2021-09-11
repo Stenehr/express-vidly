@@ -50,9 +50,9 @@ router.post('/', async (req, res) => {
         dailyRentalRate: movieDto.dailyRentalRate
     });
 
-    const result = await movie.save();
+    await movie.save();
 
-    return res.status(200).json(successResult(result));
+    return res.status(200).json(successResult(movie));
     } catch (ex) {
         return res.status(404).json(failureResult(ex.message));
     }

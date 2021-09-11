@@ -5,12 +5,12 @@ const { successResult, failureResult } = require('../utils');
 const router = express.Router();
 
 async function createGenre(name) {
-    const genre = new Genre({
-        name
-    });
-
     try {
-        const result = await genre.save();
+        const genre = new Genre({
+            name
+        });
+
+        await genre.save();
         return successResult(result);
     } catch (ex) {
         return failureResult(ex.message);
