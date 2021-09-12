@@ -7,20 +7,20 @@ const Movie = mongoose.model(
     mongoose.Schema({
         title: {
             type: String,
-            required: true
+            required: true,
         },
         genre: {
             type: genreSchema,
-            required: true
+            required: true,
         },
         numberInStock: {
             type: Number,
-            default: 0
+            default: 0,
         },
         dailyRentalRate: {
             type: Number,
-            default: 0
-        }
+            default: 0,
+        },
     })
 );
 
@@ -29,7 +29,7 @@ function validateMovie(movie) {
         title: Joi.string().required(),
         genreId: Joi.objectId().required(),
         numberInStock: Joi.number(),
-        dailyRentalRate: Joi.number()
+        dailyRentalRate: Joi.number(),
     });
 
     return schema.validate(movie);
@@ -37,5 +37,5 @@ function validateMovie(movie) {
 
 module.exports = {
     Movie,
-    validateMovie
+    validateMovie,
 };

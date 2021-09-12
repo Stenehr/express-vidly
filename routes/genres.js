@@ -7,7 +7,7 @@ const router = express.Router();
 async function createGenre(name) {
     try {
         const genre = new Genre({
-            name
+            name,
         });
 
         await genre.save();
@@ -38,7 +38,7 @@ async function updateGenre(id, name) {
 
     const genre = getGenreResult.data;
     genre.set({
-        name
+        name,
     });
 
     try {

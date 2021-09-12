@@ -36,7 +36,7 @@ router.post('/', async (req, res) => {
         let customer = new Customer({
             isGold,
             name,
-            phone
+            phone,
         });
 
         await customer.save();
@@ -60,8 +60,8 @@ router.put('/:id', async (req, res) => {
                 $set: {
                     isGold,
                     name,
-                    phone
-                }
+                    phone,
+                },
             },
             { new: true }
         );

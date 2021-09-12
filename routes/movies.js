@@ -17,7 +17,7 @@ router.get('/:id', async (req, res) => {
     try {
         const movie = await Movie.findById(req.params.id);
         if (!movie) {
-            return res.status(404).json(failureResult('Movie not found.'))
+            return res.status(404).json(failureResult('Movie not found.'));
         }
 
         return res.status(200).json(successResult(movie));
@@ -33,26 +33,26 @@ router.post('/', async (req, res) => {
     }
 
     try {
-    const movieDto = req.body;
+        const movieDto = req.body;
 
-    const genre = await Genre.findById(movieDto.genreId);
-    if (!genre) {
-        return res.status(404).json(failureResult("Genre not found!"));
-    }
+        const genre = await Genre.findById(movieDto.genreId);
+        if (!genre) {
+            return res.status(404).json(failureResult('Genre not found!'));
+        }
 
-    const movie = new Movie({
-        title: movieDto.title,
-        genre: {
-            _id: genre.id,
-            name: genre.name
-        },
-        numberInStock: movieDto.numberInStock,
-        dailyRentalRate: movieDto.dailyRentalRate
-    });
+        const movie = new Movie({
+            title: movieDto.title,
+            genre: {
+                _id: genre.id,
+                name: genre.name,
+            },
+            numberInStock: movieDto.numberInStock,
+            dailyRentalRate: movieDto.dailyRentalRate,
+        });
 
-    await movie.save();
+        await movie.save();
 
-    return res.status(200).json(successResult(movie));
+        return res.status(200).json(successResult(movie));
     } catch (ex) {
         return res.status(404).json(failureResult(ex.message));
     }
@@ -68,19 +68,23 @@ router.put('/:id', async (req, res) => {
         const movieDto = req.body;
         const genre = await Genre.findById(movieDto.genreId);
         if (!genre) {
-            return res.status(404).json(failureResult("Genre not found!"));
+            return res.status(404).json(failureResult('Genre not found!'));
         }
 
-        const result = await Movie.findByIdAndUpdate(req.params.id, {
-            $set: {
-                title: movieDto.title,
-                genre: {
-                    name: genre.name
+        const result = await Movie.findByIdAndUpdate(
+            req.params.id,
+            {
+                $set: {
+                    title: movieDto.title,
+                    genre: {
+                        name: genre.name,
+                    },
+                    numberInStock: movieDto.numberInStock,
+                    dailyRentalRate: movieDto.dailyRentalRate,
                 },
-                numberInStock: movieDto.numberInStock,
-                dailyRentalRate: movieDto.dailyRentalRate
-            }
-        }, { new: true });
+            },
+            { new: true }
+        );
 
         return res.status(200).json(successResult(result));
     } catch (ex) {

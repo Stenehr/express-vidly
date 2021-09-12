@@ -6,15 +6,15 @@ const Customer = mongoose.model(
     mongoose.Schema({
         isGold: {
             type: Boolean,
-            default: false
+            default: false,
         },
         name: {
             type: String,
-            required: true
+            required: true,
         },
         phone: {
-            type: String
-        }
+            type: String,
+        },
     })
 );
 
@@ -22,7 +22,7 @@ function validateCustomer(customer) {
     const schema = Joi.object({
         name: Joi.string().required(),
         isGold: Joi.bool().optional(),
-        phone: Joi.string()
+        phone: Joi.string(),
     });
 
     return schema.validate(customer);
@@ -30,5 +30,5 @@ function validateCustomer(customer) {
 
 module.exports = {
     Customer,
-    validateCustomer
+    validateCustomer,
 };
