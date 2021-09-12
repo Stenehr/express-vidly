@@ -70,8 +70,9 @@ router.get('/:id', async (req, res) => {
 
 router.post('/', async (req, res) => {
     const { error } = validateGenre(req.body);
-    if (error)
+    if (error) {
         return res.status(404).json(failureResult(error.details[0].message));
+    }
 
     const creationResult = await createGenre(req.body.name);
 
@@ -80,8 +81,9 @@ router.post('/', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
     const { error } = validateGenre(req.body);
-    if (error)
+    if (error) {
         return res.status(400).json(failureResult(error.details[0].message));
+    }
 
     const updateResult = await updateGenre(req.params.id, req.body.name);
 
