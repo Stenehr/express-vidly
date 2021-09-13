@@ -4,6 +4,7 @@ const { Rental, validateRental } = require('../models/rental');
 const { Customer } = require('../models/customer');
 const { Movie } = require('../models/movie');
 const { successResult, failureResult } = require('../utils');
+const validateAuth = require('../middleware/auth');
 
 const router = express.Router();
 Fawn.init('mongodb://localhost:27017/vidly');
@@ -17,7 +18,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', validateAuth, async (req, res) => {
     const { error } = validateRental(req.body);
     if (error)
         return res.status(400).json(failureResult(error.details[0].message));

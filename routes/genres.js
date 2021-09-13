@@ -1,6 +1,8 @@
 const express = require('express');
 const { Genre, validateGenre } = require('../models/genre');
 const { successResult, failureResult } = require('../utils');
+const validateAuth = require('../middleware/auth');
+const validateAdmin = require('../middleware/admin');
 
 const router = express.Router();
 
@@ -11,7 +13,7 @@ async function createGenre(name) {
         });
 
         await genre.save();
-        return successResult(result);
+        return successResult(genre);
     } catch (ex) {
         return failureResult(ex.message);
     }
@@ -68,7 +70,7 @@ router.get('/:id', async (req, res) => {
     res.status(getGenreResult.success ? 200 : 404).json(getGenreResult);
 });
 
-router.post('/', async (req, res) => {
+router.post('/', validateAuth, async (req, res) => {
     const { error } = validateGenre(req.body);
     if (error) {
         return res.status(404).json(failureResult(error.details[0].message));
@@ -79,7 +81,7 @@ router.post('/', async (req, res) => {
     res.status(creationResult.success ? 201 : 400).json(creationResult);
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', validateAuth, async (req, res) => {
     const { error } = validateGenre(req.body);
     if (error) {
         return res.status(400).json(failureResult(error.details[0].message));
@@ -90,7 +92,7 @@ router.put('/:id', async (req, res) => {
     res.status(updateResult.success ? 200 : 400).json(updateResult);
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', [validateAuth, validateAdmin], async (req, res) => {
     const deleteResult = await removeGenre(req.params.id);
 
     res.status(deleteResult.success ? 200 : 400).json(deleteResult);

@@ -2,6 +2,7 @@ const express = require('express');
 const { Genre } = require('../models/genre');
 const { Movie, validateMovie } = require('../models/movie');
 const { successResult, failureResult } = require('../utils');
+const validateAuth = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -26,7 +27,7 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-router.post('/', async (req, res) => {
+router.post('/', validateAuth, async (req, res) => {
     const { error } = validateMovie(req.body);
     if (error) {
         return res.status(400).json(failureResult(error.details[0].message));
@@ -58,7 +59,7 @@ router.post('/', async (req, res) => {
     }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', validateAuth, async (req, res) => {
     const { error } = validateMovie(req.body);
     if (error) {
         return res.status(400).json(failureResult(error.details[0].message));
@@ -92,7 +93,7 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', validateAuth, async (req, res) => {
     try {
         const result = await Movie.findByIdAndRemove(req.params.id);
         return res.status(200).json(successResult(result));

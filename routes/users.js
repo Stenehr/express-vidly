@@ -3,8 +3,15 @@ const bcrypt = require('bcrypt');
 const express = require('express');
 const { User, validateUser } = require('../models/user');
 const { successResult, failureResult } = require('../utils');
+const validateAuth = require('../middleware/auth');
 
 const router = express.Router();
+
+router.get('/me', validateAuth, async (req, res) => {
+    const user = await User.findById(req.user.id).select('-password');
+
+    return res.status(200).json(successResult(user));
+});
 
 router.post('/', async (req, res) => {
     const { error } = validateUser(req.body);
@@ -30,8 +37,12 @@ router.post('/', async (req, res) => {
         });
 
         await user.save();
+
+        const token = user.generateAuthToken();
+
         return res
             .status(201)
+            .header('x-auth-token', token)
             .json(successResult(_.pick(user, ['_id', 'name', 'email'])));
     } catch (ex) {
         return res.status(500).json(failureResult(ex.message));
